@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 public class TestJDBC {
     /* La liste qui contiendra tous les résultats de nos essais */
     private List<String> messages = new ArrayList<String>();
+    
+    public void testConnection() {
+    	
+    }
 
     public List<String> executerTests( HttpServletRequest request ) {
     	/* Chargement du driver JDBC pour MySQL */

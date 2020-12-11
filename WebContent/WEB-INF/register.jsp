@@ -1,6 +1,4 @@
-<%@ page pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="zxx">
     
 <!-- login-register31:27-->
@@ -44,132 +42,136 @@
         <link rel="stylesheet" href="css/responsive.css">
         <!-- Modernizr js -->
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-
-        <style>
-            body {
-                /* color: #fff;
-                background-image: url("images/body-bg.jpg");
-                background-repeat: no-repeat;
-                background-size: cover;
-                -moz-background-size: cover;
-                -webkit-background-size: cover;
-                -o-background-size: cover;
-                -ms-background-size: cover;
-                background-position: center center;
-                font-family: 'Roboto Slab';
-                margin: 0px; */
-                background: rgb(54,63,77);
-                background: linear-gradient(90deg, rgba(54,63,77,1) 0%, rgba(254,215,0,1) 35%, rgba(255,255,255,1) 100%);
-                }
-        </style>
     </head>
     <body>
     <!--[if lt IE 8]>
-		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
         <!-- Begin Body Wrapper -->
         <div class="body-wrapper">
-
-
-            <div style="height: 80vh;" class="row align-items-center">
+            <!-- Begin Header Area -->
+            <header>
+                <!-- Begin Header Top Area -->
+                <%@include file='partials/header-top.jsp' %>
+                <!-- Header Top Area End Here -->
+                <!-- Begin Header Middle Area -->
+                <%@include file='partials/header-middle.jsp' %>
+                <!-- Header Middle Area End Here -->
+                <!-- Begin Header Bottom Area -->
+                <%@include file='partials/header-bottom.jsp' %>
+                <!-- Header Bottom Area End Here -->
+                <!-- Begin Mobile Menu Area -->
+                <div class="mobile-menu-area d-lg-none d-xl-none col-12">
+                    <div class="container"> 
+                        <div class="row">
+                            <div class="mobile-menu">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Menu Area End Here -->
+            </header>
+            <!-- Header Area End Here -->
+            <!-- Begin Li's Breadcrumb Area -->
+            <div class="breadcrumb-area">
                 <div class="container">
-                    <div class="mt-4 d-flex align-middle justify-content-center row align-items-center h-100"> 
-                        <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
-                            <!-- Login Form s-->
-                            <form action="#">
+                    <div class="breadcrumb-content">
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active">Login Register</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Li's Breadcrumb Area End Here -->
+            <!-- Begin Login Content Area -->
+            <div class="page-section mb-60">
+                <div class="container">
+                    <div class="row">
+                        
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xs-12">
+                            <form method="post" action="register">
                                 <div class="login-form">
                                     <h4 class="login-title">Register</h4>
                                     <div class="row">
                                         <div class="col-md-6 col-12 mb-20">
-                                            <label>Prenom</label>
-                                            <input class="mb-0" type="text" placeholder="Votre Prenom">
+                                            <label>Prenom*</label>
+                                            <input class="mb-0" type="text" name="prenom" value="<c:out value="${User.prenom}"/>" placeholder="Votre Prenom">
+                                            <span class="erreur">${form.erreurs['prenom']}</span>
                                         </div>
                                         <div class="col-md-6 col-12 mb-20">
-                                            <label>Nom</label>
-                                            <input class="mb-0" type="text" placeholder="Votre Nom">
+                                            <label>Nom*</label>
+                                            <input class="mb-0" type="text" name="nom" value="<c:out value="${User.nom}"/>" placeholder="Votre Nom">
+                                            <span class="erreur">${form.erreurs['nom']}</span>
                                         </div>
                                         <div class="col-md-12 mb-20">
-                                            <label>Pseudonyme</label>
-                                            <input class="mb-0" type="text" placeholder="Votre pseudonyme">
+                                            <label>Pseudonyme*</label>
+                                            <input class="mb-0" type="text" name=username value="<c:out value="${User.username}"/>" placeholder="Votre pseudonyme">
+                                            <span class="erreur">${form.erreurs['username']}</span>
                                         </div>
                                         <div class="col-md-12 mb-20">
                                             <label>Email*</label>
-                                            <input class="mb-0" type="email" placeholder="Votre Email">
+                                            <input class="mb-0" type="email" name="email" value="<c:out value="${User.email}"/>" placeholder="Votre Email">
+                                            <span class="erreur">${form.erreurs['email']}</span>
                                         </div>
                                         <div class="col-md-12 mb-20">
-                                            <label>TÃ©lÃ©phone</label>
-                                            <input class="mb-0" type="tel" placeholder="NumÃ©ro de TÃ©lÃ©phone">
+                                            <label>Téléphone*</label>
+                                            <input class="mb-0" type="tel" name="phone" value="<c:out value="${User.telephone}"/>" placeholder="Numéro De Téléphone">
+                                            <span class="erreur">${form.erreurs['phone']}</span>
                                         </div>
                                         <div class="col-md-12 mb-20">
-                                            <label>Address</label>
-                                            <input class="mb-0" type="text" placeholder="Votre Adresse">
+                                            <label>Address*</label>
+                                            <input class="mb-0" type="text" name="address" value="<c:out value="${User.address}"/>" placeholder="Votre Adresse">
+                                            <span class="erreur">${form.erreurs['address']}</span>
+                                        </div>
+                                        <div class="col-md-12 mb-20">
+                                            <label>Profile*</label>
+                                            <select id="inputState" name=profile class="form-control">
+        										<option value=acheteur selected>acheteur</option>
+        										<option value=vendeur>vendeur</option>
+      										</select>
+      										<span class="erreur">${form.erreurs['profile']}</span>
                                         </div>
                                         <div class="col-md-6 mb-20">
-                                            <label>Password</label>
-                                            <input class="mb-0" type="password" placeholder="Password">
+                                            <label>Mot de Passe*</label>
+                                            <input class="mb-0" type="password" name="password" placeholder="votre mot de passe">
+                                            <span class="erreur">${form.erreurs['motdepasse']}</span>
                                         </div>
                                         <div class="col-md-6 mb-20">
-                                            <label>Confirm Password</label>
-                                            <input class="mb-0" type="password" placeholder="Confirm Password">
+                                            <label>Confirmation du mot de passe*</label>
+                                            <input class="mb-0" type="password" name="confirmpassword" placeholder="Confirmer votre mot de passe">
+                                            <span class="erreur">${form.erreurs['confirmpassword']}</span>
                                         </div>
                                         <div class="col-12">
                                             <button class="register-button mt-0">Register</button>
                                         </div>
+                                        <p class="${empty form.erreurs ? 'succes' : 'erreur'}">${form.resultat}</p>
                                     </div>
                                 </div>
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- Login Content Area End Here -->
             <!-- Begin Footer Area -->
-            
+            <div class="footer">
+                <!-- Begin Footer Static Top Area -->
+                <%@include file='partials/footer-top.jsp' %>
+                <!-- Footer Static Top Area End Here -->
+                <!-- Begin Footer Static Middle Area -->
+                <%@include file='partials/footer-middle.jsp' %>
+                <!-- Footer Static Middle Area End Here -->
+                <!-- Begin Footer Static Bottom Area -->
+                <%@include file='partials/footer-bottom.jsp' %>
+                <!-- Footer Static Bottom Area End Here -->
+            </div>
             <!-- Footer Area End Here -->
         </div>
         <!-- Body Wrapper End Here -->
-        <!-- jQuery-V1.12.4 -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
-        <!-- Popper js -->
-        <script src="js/vendor/popper.min.js"></script>
-        <!-- Bootstrap V4.1.3 Fremwork js -->
-        <script src="js/bootstrap.min.js"></script>
-        <!-- Ajax Mail js -->
-        <script src="js/ajax-mail.js"></script>
-        <!-- Meanmenu js -->
-        <script src="js/jquery.meanmenu.min.js"></script>
-        <!-- Wow.min js -->
-        <script src="js/wow.min.js"></script>
-        <!-- Slick Carousel js -->
-        <script src="js/slick.min.js"></script>
-        <!-- Owl Carousel-2 js -->
-        <script src="js/owl.carousel.min.js"></script>
-        <!-- Magnific popup js -->
-        <script src="js/jquery.magnific-popup.min.js"></script>
-        <!-- Isotope js -->
-        <script src="js/isotope.pkgd.min.js"></script>
-        <!-- Imagesloaded js -->
-        <script src="js/imagesloaded.pkgd.min.js"></script>
-        <!-- Mixitup js -->
-        <script src="js/jquery.mixitup.min.js"></script>
-        <!-- Countdown -->
-        <script src="js/jquery.countdown.min.js"></script>
-        <!-- Counterup -->
-        <script src="js/jquery.counterup.min.js"></script>
-        <!-- Waypoints -->
-        <script src="js/waypoints.min.js"></script>
-        <!-- Barrating -->
-        <script src="js/jquery.barrating.min.js"></script>
-        <!-- Jquery-ui -->
-        <script src="js/jquery-ui.min.js"></script>
-        <!-- Venobox -->
-        <script src="js/venobox.min.js"></script>
-        <!-- Nice Select js -->
-        <script src="js/jquery.nice-select.min.js"></script>
-        <!-- ScrollUp js -->
-        <script src="js/scrollUp.min.js"></script>
-        <!-- Main/Activator js -->
-        <script src="js/main.js"></script>
+        <!--script-dependence begin  -->
+        <%@include file='partials/script-dependances.jsp' %>
+        <!-- script-dependence end  -->
     </body>
 
 <!-- login-register31:27-->

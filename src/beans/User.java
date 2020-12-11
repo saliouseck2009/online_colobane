@@ -12,8 +12,15 @@ public class User {
     private Timestamp dateInscription;
     private String phone;
     private String address;
+    private String profile;
 
-    public Long getId() {
+    public String getProfile() {
+		return profile;
+	}
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+	public Long getId() {
         return id;
     }
     public void setId( Long id ) {
