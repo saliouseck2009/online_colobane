@@ -1,100 +1,126 @@
-//package forms;
-//
-//
-//import java.util.HashMap;
-//import java.util.Map;
-//
-//import javax.servlet.http.HttpServletRequest;
-//
-//import beans.Utilisateur;
-//
-//public final class ConnexionForm {
-//    private static final String CHAMP_EMAIL  = "email";
-//    private static final String CHAMP_PASS   = "motdepasse";
-//
-//    private String resultat;
-//    private Map<String, String> erreurs = new HashMap<String, String>();
-//
-//    public String getResultat() {
-//        return resultat;
-//    }
-//
-//    public Map<String, String> getErreurs() {
-//        return erreurs;
-//    }
-//
-//    public Utilisateur connecterUtilisateur( HttpServletRequest request ) {
-//        /* Récupération des champs du formulaire */
-//        String email = getValeurChamp( request, CHAMP_EMAIL );
-//        String motDePasse = getValeurChamp( request, CHAMP_PASS );
-//
-//        Utilisateur utilisateur = new Utilisateur();
-//
-//        /* Validation du champ email. */
+package forms;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.jasypt.util.password.ConfigurablePasswordEncryptor;
+
+import beans.User;
+import dao.DAOException;
+import dao.UserDao;
+
+public final class ConnexionForm {
+	private static final String CHAMP_EMAIL  = "email";
+    private static final String CHAMP_PASS   = "password";
+    //private static final String CHAMP_PROFILE = "profile";
+    private static final String ALGO_CHIFFREMENT = "SHA-256";
+    
+    private String resultat;
+    private Map<String, String> erreurs = new HashMap<String, String>();
+    private UserDao userDao;
+    
+    public ConnexionForm(UserDao userDao) {
+    	this.userDao = userDao;
+	}
+
+	public String getResultat() {
+        return resultat;
+    }
+
+    public Map<String, String> getErreurs() {
+        return erreurs;
+    }
+    
+    public User connexionUser( HttpServletRequest request ) {
+        String email = getValeurChamp( request, CHAMP_EMAIL );
+        String password = getValeurChamp( request, CHAMP_PASS );
+        //String profile = getValeurChamp(request, CHAMP_PROFILE);
+
+        User user = new User();
+
+        try {
+        	user = validationConnexion(email,password, user);
+        	
+        	if (erreurs.isEmpty()) {
+                resultat = "Succés de la connexion.";
+            } else {
+                resultat = "échec de la connexion.";
+            }
+        } catch ( DAOException e) {
+            resultat = "Echec de l'inscription : une erreur imprévue est survenue, merci de réssayer dans quelques instants.";
+            e.printStackTrace();
+        } catch (FormValidationException e) {
+			// TODO Auto-generated catch block
+			e.getMessage();
+		}
+
+        return user;
+    }
+    
+    
+//    private void traiterProfile( String profile, User user ) {
 //        try {
-//            validationEmail( email );
-//        } catch ( Exception e ) {
-//            setErreur( CHAMP_EMAIL, e.getMessage() );
+//            validationProfile( profile );
+//        } catch ( FormValidationException e ) {
+//            setErreur( CHAMP_PROFILE, e.getMessage() );
 //        }
-//        utilisateur.setEmail( email );
-//
-//        /* Validation du champ mot de passe. */
-//        try {
-//            validationMotDePasse( motDePasse );
-//        } catch ( Exception e ) {
-//            setErreur( CHAMP_PASS, e.getMessage() );
-//        }
-//        utilisateur.setMotDePasse( motDePasse );
-//
-//        /* Initialisation du résultat global de la validation. */
-//        if ( erreurs.isEmpty() ) {
-//            resultat = "Succès de la connexion.";
-//        } else {
-//            resultat = "Échec de la connexion.";
-//        }
-//
-//        return utilisateur;
+//        user.setProfile(profile);
 //    }
-//
-//    /**
-//     * Valide l'adresse email saisie.
-//     */
-//    private void validationEmail( String email ) throws Exception {
-//        if ( email != null && !email.matches( "([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)" ) ) {
-//            throw new Exception( "Merci de saisir une adresse mail valide." );
-//        }
-//    }
-//
-//    /**
-//     * Valide le mot de passe saisi.
-//     */
-//    private void validationMotDePasse( String motDePasse ) throws Exception {
-//        if ( motDePasse != null ) {
-//            if ( motDePasse.length() < 3 ) {
-//                throw new Exception( "Le mot de passe doit contenir au moins 3 caractères." );
-//            }
-//        } else {
-//            throw new Exception( "Merci de saisir votre mot de passe." );
+    
+    /* Validation de l'adresse email */
+    private User validationConnexion( String email, String password, User user ) throws FormValidationException{
+    	String message ="Merci de renseigner des identifiants valides";
+    	user = userDao.find_by_email( email );
+        if ( user != null ) {
+        	ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
+            passwordEncryptor.setAlgorithm( ALGO_CHIFFREMENT );
+            passwordEncryptor.setPlainDigest( false );
+            String passwordChiffre = passwordEncryptor.encryptPassword( password );
+        	
+           // if ( passwordEncryptor.checkPassword(password,user.getPassword()) ) {
+           if ( passwordChiffre == user.getPassword() ) {
+                return user;
+            } else if ( userDao.find_by_email( email ) != null ) {
+            	user =null;
+            	setErreur(password, message);
+            	throw new FormValidationException("Mot de passe incorrect ");
+            }
+        } else {
+        	setErreur(email, message);
+        	throw new FormValidationException("l'email entré n'existe pas ");
+            
+        }
+        return user;
+    }
+
+    
+//    private void validationProfile( String profile ) throws FormValidationException {
+//        if ( profile != null && profile.length() < 2) {
+//            throw new FormValidationException( "Le profile contenir au moins 2 caractères." );
 //        }
 //    }
-//
-//    /*
-//     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
-//     */
-//    private void setErreur( String champ, String message ) {
-//        erreurs.put( champ, message );
-//    }
-//
-//    /*
-//     * Méthode utilitaire qui retourne null si un champ est vide, et son contenu
-//     * sinon.
-//     */
-//    private static String getValeurChamp( HttpServletRequest request, String nomChamp ) {
-//        String valeur = request.getParameter( nomChamp );
-//        if ( valeur == null || valeur.trim().length() == 0 ) {
-//            return null;
-//        } else {
-//            return valeur;
-//        }
-//    }
-//}
+    
+
+    /*
+     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
+     */
+    private void setErreur( String champ, String message ) {
+        erreurs.put( champ, message );
+    }
+
+    /*
+     * Méthode utilitaire qui retourne null si un champ est vide, et son contenu
+     * sinon.
+     */
+    private static String getValeurChamp( HttpServletRequest request, String nomChamp ) {
+        String valeur = request.getParameter( nomChamp );
+        if ( valeur == null || valeur.trim().length() == 0 ) {
+            return null;
+        } else {
+            return valeur;
+        }
+    }
+}

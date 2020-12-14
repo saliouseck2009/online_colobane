@@ -194,7 +194,7 @@ public final class InscriptionForm {
         if ( email != null ) {
             if ( !email.matches( "([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)" ) ) {
                 throw new FormValidationException( "Merci de saisir une adresse mail valide." );
-            } else if ( userDao.find( email ) != null ) {
+            } else if ( userDao.find_by_email( email ) != null ) {
                 throw new FormValidationException( "Cette adresse email est déjà utilisé, merci d'en choisir une autre." );
             }
         } else {

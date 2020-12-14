@@ -29,6 +29,8 @@
 <link rel="stylesheet" href="css/helper.css">
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="style.css">
+<!-- Personnal Style CSS -->
+<link rel="stylesheet" href="css/style.css">
 <!-- Responsive CSS -->
 <link rel="stylesheet" href="css/responsive.css">
 <!-- Modernizr js -->

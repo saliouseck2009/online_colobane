@@ -17,6 +17,7 @@ public class UserDaoImpl implements UserDao {
 	//definition des requestes
 	private static final String SQL_SELECT_PAR_EMAIL = "SELECT * FROM ACHETEUR WHERE email = ?";
 	private static final String SQL_INSERT = "INSERT INTO ACHETEUR (username, email, password, prenom, nom, tel, addresse) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_SELECT_PAR_EMAIL_PASSWORD = "SELECT * FROM ACHETEUR WHERE email = ? AND PASSWORD = ?";
     
 	UserDaoImpl( DAOFactory daoFactory ) {
         this.daoFactory = daoFactory;
@@ -24,8 +25,13 @@ public class UserDaoImpl implements UserDao {
 	
 	/* Implémentation de la méthode définie dans l'interface UtilisateurDao */
     @Override
-    public User find( String email ) throws DAOException {
-        return find( SQL_SELECT_PAR_EMAIL, email );
+    public User find_by_email( String email ) throws DAOException {
+        return find_email( SQL_SELECT_PAR_EMAIL, email );
+    }
+    
+    @Override
+    public User find_by_email_password( String email, String password ) throws DAOException {
+        return find_email_password( SQL_SELECT_PAR_EMAIL_PASSWORD, email );
     }
     
 	@Override
@@ -63,7 +69,7 @@ public class UserDaoImpl implements UserDao {
 
 
 	
-	private User find(String sql, Object... objets) throws DAOException {
+	private User find_email(String sql, Object... objets) throws DAOException {
 		Connection connexion = null;
 	    PreparedStatement preparedStatement = null;
 	    ResultSet resultSet = null;
@@ -73,6 +79,30 @@ public class UserDaoImpl implements UserDao {
 	        /* Récupération d'une connexion depuis la Factory */
 	        connexion = daoFactory.getConnection();
 	        preparedStatement = initialisationRequetePreparee( connexion, SQL_SELECT_PAR_EMAIL, false, objets );
+	        resultSet = preparedStatement.executeQuery();
+	        /* Parcours de la ligne de données de l'éventuel ResulSet retourné */
+	        if ( resultSet.next() ) {
+	            user = map( resultSet );
+	        }
+	    } catch ( SQLException e ) {
+	        throw new DAOException( e );
+	    } finally {
+	        fermeturesSilencieuses( resultSet, preparedStatement, connexion );
+	    }
+
+	    return user;
+	}
+	
+	private User find_email_password(String sql, Object... objets) throws DAOException {
+		Connection connexion = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+	    User user = null;
+
+	    try {
+	        /* Récupération d'une connexion depuis la Factory */
+	        connexion = daoFactory.getConnection();
+	        preparedStatement = initialisationRequetePreparee( connexion, SQL_SELECT_PAR_EMAIL_PASSWORD, false, objets );
 	        resultSet = preparedStatement.executeQuery();
 	        /* Parcours de la ligne de données de l'éventuel ResulSet retourné */
 	        if ( resultSet.next() ) {
