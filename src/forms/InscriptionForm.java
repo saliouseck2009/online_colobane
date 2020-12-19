@@ -33,11 +33,13 @@ public final class InscriptionForm {
     private String resultat;
     private Map<String, String> erreurs = new HashMap<String, String>();
     private UserDao userDao;
+    public md5 md = new md5();
     
     public InscriptionForm(UserDao userDao) {
     	this.userDao = userDao;
 	}
 
+    
 	public String getResultat() {
         return resultat;
     }
@@ -108,19 +110,8 @@ public final class InscriptionForm {
             setErreur( CHAMP_CONF, null );
         }
 
-        /*
-         * Utilisation de la bibliothÃ¨que Jasypt pour chiffrer le mot de passe
-         * efficacement.
-         * 
-         * L'algorithme SHA-256 est ici utilisÃ©, avec par dÃ©faut un salage
-         * aléatoire et un grand nombre d'itÃ©rations de la fonction de hashage.
-         * 
-         * La String retournÃ©e est de longueur 56 et contient le hash en Base64.
-         */
-        ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
-        passwordEncryptor.setAlgorithm( ALGO_CHIFFREMENT );
-        passwordEncryptor.setPlainDigest( false );
-        String passwordChiffre = passwordEncryptor.encryptPassword( password );
+        
+        String passwordChiffre = md.hachPassword(password);
 
         user.setPassword( passwordChiffre );
     }

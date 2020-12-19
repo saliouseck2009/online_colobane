@@ -11,6 +11,7 @@ import org.jasypt.util.password.ConfigurablePasswordEncryptor;
 import beans.User;
 import dao.DAOException;
 import dao.UserDao;
+import forms.md5;
 
 public final class ConnexionForm {
 	private static final String CHAMP_EMAIL  = "email";
@@ -21,6 +22,7 @@ public final class ConnexionForm {
     private String resultat;
     private Map<String, String> erreurs = new HashMap<String, String>();
     private UserDao userDao;
+	
     
     public ConnexionForm(UserDao userDao) {
     	this.userDao = userDao;
@@ -75,10 +77,9 @@ public final class ConnexionForm {
     	String message ="Merci de renseigner des identifiants valides";
     	user = userDao.find_by_email( email );
         if ( user != null ) {
-        	ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
-            passwordEncryptor.setAlgorithm( ALGO_CHIFFREMENT );
-            passwordEncryptor.setPlainDigest( false );
-            String passwordChiffre = passwordEncryptor.encryptPassword( password );
+        	md5 md =new md5();
+            String passwordChiffre = ((md5) md).hachPassword(password);
+            
         	
            // if ( passwordEncryptor.checkPassword(password,user.getPassword()) ) {
            if ( passwordChiffre == user.getPassword() ) {
